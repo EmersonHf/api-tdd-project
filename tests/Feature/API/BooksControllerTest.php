@@ -45,7 +45,7 @@ class BooksControllerTest extends TestCase
 
 
     }
-    use RefreshDatabase;
+
     /**
      * A basic feature test example.
      */
@@ -82,7 +82,7 @@ class BooksControllerTest extends TestCase
 
 
 
-    use RefreshDatabase;
+
     /**
      * A basic feature test example.
      */
@@ -107,6 +107,55 @@ class BooksControllerTest extends TestCase
 
 
     }
+
+
+    public function test_put_books_endpoint()
+    {
+        Book::factory()->createOne();
+        $book =
+        [
+            'title' => 'atualizando livro..',
+            'isbn'=> '1234567890'
+        ];
+
+        $response = $this->putJson('/api/books/1' , $book);
+
+
+        $response->assertStatus(200);
+
+        $response->assertJson(function (AssertableJson $json) use($book){
+
+            $json->hasAll(['id','title','isbn','created_at','updated_at']);
+            $json->where('title',$book['title']);
+
+        });
+
+
+    }
+
+    // public function test_patch_books_endpoint()
+    // {
+    //     Book::factory(1)->createOne();
+    //     $book =
+    //     [
+    //         'title' => 'atualizando livro patch..',
+
+    //     ];
+
+    //     $response = $this->patchJson('/api/books/1' , $book);
+
+
+    //     $response->assertStatus(200);
+
+    //     $response->assertJson(function (AssertableJson $json) use($book){
+
+    //         $json->hasAll(['id','title','isbn','created_at','updated_at'])->etc();
+    //         $json->where('title',$book['title']);
+
+    //     });
+
+
+    // }
 
 
 }
