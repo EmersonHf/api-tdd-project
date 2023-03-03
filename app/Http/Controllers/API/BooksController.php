@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Models\Book;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class BooksController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Book $book)
     {
 
-     return response()->json([['id'=>'1'],['id'=>'2'],['id'=>'3']]);
+     return response()->json($book->all());
     }
 
     /**
