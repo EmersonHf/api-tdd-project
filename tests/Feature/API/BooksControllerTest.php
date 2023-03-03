@@ -46,5 +46,40 @@ class BooksControllerTest extends TestCase
 
     }
 
+    use RefreshDatabase;
+    /**
+     * A basic feature test example.
+     */
+    public function test_get_single_book_endpoint(): void
+    {
+        $book = Book::factory(1)->createOne();
+
+        $response = $this->getJson('/api/books/' . $book->id);
+
+
+        $response->assertStatus(200);
+        $response->assertJson(function (AssertableJson $json) use($book){
+            $json->hasAll(['id','title','isbn'])->etc();
+            $json->whereAllType([
+                'id'=> 'integer',
+                'title'=> 'string',
+                'isbn'=> 'string'
+            ]);
+
+
+
+
+
+            $json->whereAll([
+                'id' => $book->id,
+                'title' => $book->title,
+                'isbn' => $book->isbn
+            ]);
+
+        });
+
+
+    }
+
 
 }
