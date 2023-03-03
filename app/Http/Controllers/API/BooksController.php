@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 
 class BooksController extends Controller
 {
+    public function __construct(private Book $book){
+
+    }
     /**
      * Display a listing of the resource.
      */
@@ -28,9 +31,10 @@ class BooksController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Book $book)
+    public function show($id)
     {
-        //
+        $book = $this->book->find($id);
+        return response()->json($book);
     }
 
     /**
