@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
+
 class BooksControllerTest extends TestCase
 {
     use RefreshDatabase;
@@ -160,7 +161,10 @@ class BooksControllerTest extends TestCase
         Book::factory(1)->createOne();
 
         $response = $this->deleteJson('/api/books/1');
+
+
         $response->assertStatus(204);
+
     }
 
 

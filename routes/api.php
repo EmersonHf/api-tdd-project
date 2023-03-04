@@ -18,11 +18,4 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-Route::get('books', [BooksController::class,'index']);
-Route::post('books', [BooksController::class,'store']);
-Route::get('books/{id}', [BooksController::class,'show']);
-Route::put('books/{id}', [BooksController::class,'update']);
-
-Route::match(['put','patch'],'books/{id}', [BooksController::class,'update']);
-Route::delete('books/{id}', [BooksController::class,'destroy']);
+Route::apiResource('books',BooksController::class);
