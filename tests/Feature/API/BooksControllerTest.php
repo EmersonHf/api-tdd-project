@@ -7,6 +7,7 @@ use App\Http\Controllers\API\BooksController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
+use PDO;
 use Tests\TestCase;
 
 
@@ -89,7 +90,13 @@ class BooksControllerTest extends TestCase
      */
     public function test_post_book_endpoint(): void
     {
-        $book = Book::factory(1)->makeOne()->toArray();
+        $book = Book::factory(1)->createOne(
+         [   'title' => 'TITLE',
+             'isbn' => '1234567890',
+
+         ]
+
+        )->toArray();
 
         $response = $this->postJson('/api/books/' , $book);
 
@@ -99,6 +106,7 @@ class BooksControllerTest extends TestCase
         $response->assertJson(function (AssertableJson $json) use($book){
 
 
+
             $json->whereAll([
                 'title' => $book['title'],
                 'isbn' => $book['isbn']
@@ -106,6 +114,24 @@ class BooksControllerTest extends TestCase
 
         });
 
+
+    }
+
+    public function test_post_book_should_invalidate_when_try_create_a_invalid_book(): void
+    {
+         $response = $this->postJson('/api/books/',[]);
+
+
+        $response->assertStatus(422);
+
+        $response->assertJson(function (AssertableJson $json){
+
+            $json->hasAll(['message', 'errors']);
+
+            $json->where('errors.title.0', 'Este campo é obrigatorio')
+                 ->where('errors.isbn.0','Este campo é obrigatorio');
+
+        });
 
     }
 
@@ -127,7 +153,7 @@ class BooksControllerTest extends TestCase
         $response->assertJson(function (AssertableJson $json) use($book){
 
             $json->hasAll(['id','title','isbn','created_at','updated_at']);
-            $json->where('title',$book['title']);
+            $json->where('title',$book['title'])->etc();
 
         });
 
